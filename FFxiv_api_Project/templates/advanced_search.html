@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Lore Search</title>
+</head>
+
+<body>
+    <h1>Advanced Lore Search</h1>
+    <form id="advancedSearchForm" method="POST">
+        <label for="query">Query:</label>
+        <input type="text" name="query" placeholder="Enter your query" required><br>
+
+        <label for="loreCategories">Select Lore Categories:</label>
+        <input type="checkbox" name="loreCategories" value="Cutscene Subtitles"> Cutscene Subtitles
+        <input type="checkbox" name="loreCategories" value="All Quest Dialogue and text data"> All Quest Dialogue and
+        text data
+        <!-- Add checkboxes for other lore categories as needed -->
+
+        <button type="submit">Search</button>
+    </form>
+
+    <div id="resultsContainer">
+        <div id="nameEnResults">
+            <h2>Results</h2>
+            <ul id="resultsList"></ul>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('advancedSearchForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const query = formData.get('query');
+            const selectedCategories = Array.from(formData.getAll('loreCategories'));
+            const apiUrl = '/advanced_search';
+
+            console.log('Query submitted:', query);
+            console.log('Selected Categories:', selectedCategories);
+
+            fetch(apiUrl, {
+                method: 'POST',
+                body: JSON.stringify({ query: query, loreCategories: selectedCategories }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const resultsList = document.getElementById('resultsList');
+                    if (resultsList) {
+                        resultsList.innerHTML = ''; // Clear existing content
+
+                        // Check if the response data is an object
+                        if (typeof data === 'object') {
+                            // Loop through properties of the data object
+                            for (const key in data) {
+                                if (data.hasOwnProperty(key)) {
+                                    const value = data[key];
+                                    resultsList.innerHTML += `<li><strong>${key}:</strong> ${value}</li>`;
+                                }
+                            }
+                        } else {
+                            // Handle other response formats as needed
+                            resultsList.innerHTML = `<li>${JSON.stringify(data)}</li>`;
+                        }
+                    } else {
+                        console.error('Error: "resultsList" element not found.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+
+
+</body>
+
+</html>

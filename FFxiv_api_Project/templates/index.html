@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FFXIV Lore Search</title>
+</head>
+
+<body>
+    <h1>FFXIV Lore Search</h1>
+    <p>Enter your query to search for lore:</p>
+    <form id="loreSearchForm" method="POST">
+        <input type="text" name="query" placeholder="Enter your query" required>
+        <button type="submit">Search</button>
+    </form>
+    <div id="loreResults">
+        <!-- Results will be displayed here -->
+    </div>
+
+
+    <script>
+        document.getElementById('loreSearchForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            fetch('/get_info', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const loreResults = document.getElementById('loreResults');
+                    loreResults.innerHTML = '';
+                    for (const context in data) {
+                        const title = context;
+                        loreResults.innerHTML += `<h3>${replaceTitle(title)}</h3>`;
+                        loreResults.innerHTML += `<ul>`;
+                        data[context].forEach(text => {
+                            loreResults.innerHTML += `<li>${text}</li>`;
+                        });
+                        loreResults.innerHTML += `</ul>`;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+        // Your title replacement function
+        function replaceTitle(title) {
+            const titleMapping = {
+                "Balloon_Dialogue": "NPC Ballon Diallogue",
+                "ContentFinderConditionTransient_Description": "Dungeon/Guildhest/Raid Text",
+                "DefaultTalk_Text0": "Character Default Dialogue 0",
+                "EventItemHelp_Description": "Event Item - Help Description",
+                "InstanceContentTextData_Text": "Instance Content - Text Data",
+                "Item_Description": "Item Description",
+                "Leve_Description": "Leve Description",
+                "NpcYell_Text": "Npc Yell Text",
+                "TripleTriadCard_Description": "Triple Triad Card Description",
+                "DefaultTalk_Text1": "Character Default Dialogue 1",
+                "Mount_Tooltip": "Mount Tooltip",
+                "PublicContentTextData_TextData": "Public Content - Text Data",
+                "Quest_Dialogue": "Quest Dialogue",
+                "Quest_Journal": "Quest Journal",
+                "Quest_QA_Answer": "Quest - Question/Answer",
+                "Achievement_Description": "Achievement Description",
+                "Companion_Description": "Companion Description",
+                "Companion_Tooltip": "Companion Tooltip",
+                "Mount_Description": "Mount Description",
+                "Mount_DescriptionEnhanced": "Mount Description (Enhanced)",
+                "Quest_System": "Quest System",
+                "Status_Description": "Status Description",
+                "Fate_Description": "Fate Description",
+                "Fate_Objective": "Fate Objective",
+                "Fate_StatusText0": "Fate Status Text",
+                "Quest_ToDo": "Quest - Objectives",
+                "DefaultTalk_Text2": "Character Default Dialogue 2",
+                "Companion_DescriptionEnhanced": "Companion Description (Enhanced)"
+                // Add more title mappings as needed
+            };
+            return titleMapping[title] || title;
+        }
+
+    </script>
+
+</body>
+
+</html>

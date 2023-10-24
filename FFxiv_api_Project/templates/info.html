@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Search Results</title>
+</head>
+
+<body>
+    <h1>Search Results</h1>
+    <ul>
+        {% for result in context_groups['Advanced Search'] %}
+        <h2>{{ result.Name_en }}</h2>
+        <p>{{ result.Text }}</p>
+        <hr>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>
