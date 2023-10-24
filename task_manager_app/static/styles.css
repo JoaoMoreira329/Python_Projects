@@ -1,0 +1,21 @@
+.night-mode {
+    background-color: #333;
+    color: #fff;
+}
+
+.night-mode table {
+    background-color: #444;
+}
+
+.night-mode .table th,
+.night-mode .table td {}
+
+.night-mode .badge.bg-success {
+    background-color: #28a745;
+
+}
+
+.night-mode .badge.bg-warning {
+    background-color: #ffc107;
+    color: #333;
+}
