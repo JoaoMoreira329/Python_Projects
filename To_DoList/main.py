@@ -1,3 +1,6 @@
+#from functions import get_todos, write_todos
+from modules import functions
+
 prompt = "Type add, show or exit: "
 todos = []
 
@@ -5,20 +8,17 @@ while True:
     action = input(prompt)
     action = action.strip()
 
-    if 'add' in action:
+    if action.startswith('add'):
         todo = action[4:]
 
-        with open('todos.txt', 'r') as file:  # the with block makes sure that when done the file will be closed
-            todos = file.readlines()
+        todos = functions.get_todos('todos.txt')
 
-        todos.append(todo)
+        todos.append(todo + '\n')
 
-        with open('todos.txt', 'w') as file:
-            file.writelines(todos)
+        functions.write_todos('todos.txt', todos)
 
-    elif 'show' in action:
-        with open('todos.txt', 'r') as file:
-            todos = file.readlines()
+    elif action.startswith('show'):
+        todos = functions.get_todos('todos.txt')
 
         new_todos = [item.strip('\n') for item in todos]
 
@@ -26,32 +26,36 @@ while True:
             row = f"{index + 1}-{item}"
             print(row)
 
-    elif 'edit' in action:
-        number = int(action[5:])
-        number = number - 1
+    elif action.startswith('edit'):
+        try:
+            number = int(action[5:])
+            number = number - 1
 
-        with open('todos.txt', 'r') as file:
-            todos = file.readlines()
+            todos = functions.get_todos('todos.txt')
 
-        print("Here are the tasks: ", todos)
-        newTask = input("New task: ")
-        todos[number] = newTask + '\n'
+            print("Here are the tasks: ", todos)
+            newTask = input("New task: ")
+            todos[number] = newTask + '\n'
 
-        with open('todos.txt', 'w') as file:
-            file.writelines(todos)
+            functions.write_todos('todos.txt', todos)
+        except ValueError:
+            print("Your command is not valid")
+            continue
 
-    elif 'complete' in action:
-        with open('todos.txt', 'r') as file:
-            todos = file.readlines()
+    elif action.startswith('complete'):
+        try:
+            todos = functions.get_todos('todos.txt')
 
-        number = int(action[9:])
-        todos.pop(number - 1)
+            number = int(action[9:])
+            todos.pop(number - 1)
 
-        with open('todos.txt', 'w') as file:
-            file.writelines(todos)
+            functions.write_todos('todos.txt', todos)
+        except IndexError:
+            print("There is no item with the inputted number")
 
-    elif 'exit' in action:
+    elif action.startswith('exit'):
         break
 
     else:
         print("Command not available")
+
