@@ -1,8 +1,12 @@
 #from functions import get_todos, write_todos
 from modules import functions
+import time
 
 prompt = "Type add, show or exit: "
 todos = []
+
+now = time.strftime("%b %d, %Y %H:%M:%S")
+print("It is", now)
 
 while True:
     action = input(prompt)
@@ -15,7 +19,7 @@ while True:
 
         todos.append(todo + '\n')
 
-        functions.write_todos('todos.txt', todos)
+        functions.write_todos(todos, 'todos.txt')
 
     elif action.startswith('show'):
         todos = functions.get_todos('todos.txt')
@@ -37,7 +41,7 @@ while True:
             newTask = input("New task: ")
             todos[number] = newTask + '\n'
 
-            functions.write_todos('todos.txt', todos)
+            functions.write_todos(todos, 'todos.txt')
         except ValueError:
             print("Your command is not valid")
             continue
@@ -49,7 +53,7 @@ while True:
             number = int(action[9:])
             todos.pop(number - 1)
 
-            functions.write_todos('todos.txt', todos)
+            functions.write_todos(todos, 'todos.txt')
         except IndexError:
             print("There is no item with the inputted number")
 
